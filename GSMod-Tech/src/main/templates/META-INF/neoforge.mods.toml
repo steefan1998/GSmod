@@ -1,0 +1,47 @@
+license="${mod_license}"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+description='''
+Tech mod with a combustion generator, crusher, alloy smelter, energy cell,
+galvanite and steel, and four machine upgrades. Uses NeoForge FE, so it works
+with Mekanism, Ender IO and other FE-based mods.
+'''
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="mekanism"
+    type="optional"
+    versionRange="*"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="enderio"
+    type="optional"
+    versionRange="*"
+    ordering="AFTER"
+    side="BOTH"
+
+# Optional: GS Mod: Daily Rewards counts machine use, production and generated FE for its missions.
+[[dependencies.${mod_id}]]
+    modId="gsmod_daily"
+    type="optional"
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"

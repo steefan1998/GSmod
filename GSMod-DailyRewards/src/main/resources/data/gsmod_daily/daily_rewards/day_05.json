@@ -1,0 +1,18 @@
+{
+  "day": 5,
+  "tier": "iron",
+  "items": [ { "id": "minecraft:iron_ingot", "count": 4 } ],
+  "random": [
+    { "weight": 4, "item": { "id": "minecraft:iron_ingot" }, "min": 4, "max": 8 },
+    { "weight": 2, "item": { "id": "minecraft:iron_pickaxe" } },
+    { "weight": 1, "item": { "id": "minecraft:iron_sword" } },
+    { "weight": 1, "item": { "id": "minecraft:iron_axe" } },
+    { "weight": 2, "item": { "id": "minecraft:shield" } },
+    { "weight": 2, "item": { "id": "minecraft:bucket" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" } ], "weight": 1, "item": { "id": "mekanism:upgrade_speed" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" } ], "weight": 1, "item": { "id": "mekanism:upgrade_energy" } }
+  ],
+  "rolls": 2,
+  "experience": 50,
+  "missions": [ "gsmod_daily:mine_iron_ore" ]
+}

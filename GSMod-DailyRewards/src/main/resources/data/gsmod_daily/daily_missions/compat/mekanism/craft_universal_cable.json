@@ -1,0 +1,2 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" } ],
+  "title": "mission.gsmod.title.mekanism.craft_universal_cable", "objective": "craft_item", "target": "mekanism:basic_universal_cable", "amount": 32, "weight": 5, "rewards": [ { "id": "minecraft:iron_ingot", "count": 12 } ], "experience": 80 }

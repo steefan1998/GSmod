@@ -1,0 +1,1 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "gsmod" } ], "title": "mission.gsmod.title.use_crusher", "objective": "use_machine", "target": "gsmod:crusher", "amount": 40, "weight": 6, "rewards": [ { "id": "minecraft:emerald", "count": 3 } ], "experience": 60 }

@@ -1,8 +1,15 @@
 # GS Mod
 
-Tech mod for NeoForge **26.1.2**: machines, two new materials, upgrades, energy storage, daily rewards and daily missions.
+Two separate NeoForge **26.1.2** mods, built from this repository. Each has its own jar and works without the other.
 
-## Content
+| Mod | Mod id | Jar | What it adds |
+|---|---|---|---|
+| **GS Mod: Tech** | `gsmod` | `GSMod-Tech/build/libs/GSMod-Tech-<version>.jar` | machines, galvanite and steel, upgrades, energy cell, compat recipes |
+| **GS Mod: Daily Rewards** | `gsmod_daily` | `GSMod-DailyRewards/build/libs/GSMod-DailyRewards-<version>.jar` | daily login rewards, daily missions, the Daily screen |
+
+Both go in the `mods` folder of the client **and** the server. With both installed, Tech reports machine use, production and generated FE to Daily Rewards, so the machine missions count.
+
+## GS Mod: Tech
 
 | | |
 |---|---|
@@ -13,7 +20,7 @@ Tech mod for NeoForge **26.1.2**: machines, two new materials, upgrades, energy 
 
 All energy is NeoForge FE, so Mekanism cables, Ender IO conduits, Powah cables and similar connect directly. Hoppers and pipes can insert into inputs and pull from outputs.
 
-## Compatibility recipes
+### Compatibility recipes
 
 Only loaded when the mod is installed (and can be switched off in the config):
 
@@ -22,19 +29,30 @@ Only loaded when the mod is installed (and can be switched off in the config):
 
 Machine recipes use `gsmod:crushing` and `gsmod:alloying` (see `CrushingRecipe` / `AlloyingRecipe` for the format); `processing_time` and `energy_per_tick` can be set per recipe.
 
-## Daily rewards and missions
+### Configuration
+
+`config/gsmod-common.toml` (or Mods → GS Mod: Tech → Config): energy use and production, capacities, upgrade strength and recipe groups.
+
+## GS Mod: Daily Rewards
 
 - `/daily` or `/daily claim` — claim today's reward
 - `/daily status` — streak, next reward day and its tier, time until the reset
 - `/daily missions` — today's missions in chat
-- `/daily menu` — opens the Daily screen (players with GS Mod installed)
+- `/daily menu` — opens the Daily screen (players with the mod installed)
 - `/daily reset <players>` — operators: clear daily data
 
-The day resets at `resetHourUtc` (UTC), the same moment for every player. Everything is checked on the server and stored with the player, so it works in multiplayer and on dedicated servers. A claim is saved before the items are handed out, so a reward can never be paid twice.
+Everything is checked on the server and stored with the player, so it works in multiplayer and on dedicated servers. A claim is saved before the items are handed out, so a reward can never be paid twice.
 
-**Rewards** run in a 10-day cycle with random picks and random stack sizes. Day 5 is the **iron tier**, day 7 the **diamond tier** and day 10 the **netherite tier** (mostly netherite scrap or ancient debris; a netherite ingot is a rare roll). Each day also has a small chance for modded items when the mod is installed: Mekanism upgrades and tier installers (up to elite), Oritech machine addons, AE2 cards, Ender IO capacitors and Powah! parts.
+**Reset time:** one reset moment for the whole server, at `resetHour` in `timeZone` (default `UTC`, e.g. `Europe/Amsterdam`). Summer and winter time are handled automatically: the reset stays on the same local hour, so the day it changes is 23 or 25 hours long.
 
-**Missions:** each player gets 3 missions a day, picked by weight and the same all day. A mission can be limited to certain days of the reward cycle (`days`) or weekdays (`weekdays`), and a reward day can force missions (`missions`); by default day 5 always has "Mine 32 Iron Ore", day 10 "Produce 64 Steel Ingots", and weekends have "Play 60 minutes". Missions for Mekanism, Ender IO, AE2, Apotheosis, LTX Industries, Powah! and Tinkers' Continuum only appear when that mod is installed.
+**Rewards** run in a 10-day cycle with random picks and random stack sizes. Day 5 is the **iron tier**, day 7 the **diamond tier** and day 10 the **netherite tier** (mostly netherite scrap or ancient debris; a netherite ingot is a rare roll). Each day also has a small chance for modded items when the mod is installed: GS Mod: Tech upgrades, Mekanism upgrades and tier installers (up to elite), Oritech machine addons, AE2 cards, Ender IO capacitors and Powah! parts.
+
+On top of the day's reward:
+
+- **Week bonus** every 7 days in a row (`weekBonusEvery`): experience plus two picks such as golden apples, a name tag, diamonds or, rarely, a Mending book or a Totem of Undying.
+- **Comeback reward** when a streak of at least 3 days is lost (`comebackMinStreak`): the streak starts again at day 1, with food, torches and a useful pick to get going again.
+
+**Missions:** each player gets 3 missions a day, picked by weight and the same all day. A mission can be limited to certain days of the reward cycle (`days`) or weekdays (`weekdays`), and a reward day can force missions (`missions`); by default day 5 always has "Mine 32 Iron Ore", day 10 "Produce 64 Steel Ingots", and weekends have "Play 60 minutes". Missions that need GS Mod: Tech, Mekanism, Ender IO, AE2, Apotheosis, LTX Industries, Powah! or Tinkers' Continuum only appear when that mod is installed.
 
 With [Inventory Buttons](https://github.com/steefan1998/InventoryButtons) installed, the inventory gets two buttons: claim reward and open the Daily screen.
 
@@ -43,15 +61,16 @@ With [Inventory Buttons](https://github.com/steefan1998/InventoryButtons) instal
 Every world gets its own editable copy the first time it starts:
 
 ```
-<world>/gsmod/daily_rewards/day_01.json ... day_10.json
-<world>/gsmod/daily_missions/*.json   (compat/<mod>/ for mod-specific missions)
-<world>/gsmod/README.txt
-<world>/serverconfig/gsmod-server.toml
+<world>/gsmod_daily/daily_rewards/day_01.json ... day_10.json
+<world>/gsmod_daily/daily_rewards/bonus_week.json, bonus_comeback.json
+<world>/gsmod_daily/daily_missions/*.json   (compat/<mod>/ for mod-specific missions)
+<world>/gsmod_daily/README.txt
+<world>/serverconfig/gsmod_daily-server.toml
 ```
 
-Edit, add or delete files there; changes apply with `/reload` or `/daily debug reload`. Delete a folder to get the defaults back. `gsmod-server.toml` holds the world's daily settings (rewards on/off, reset hour, streak grace days, missions on/off, missions per day) and applies on the next world start. Put a `gsmod-server.toml` in `defaultconfigs/` to use it for new worlds.
+Edit, add or delete files there; changes apply with `/reload` or `/daily debug reload`. Delete a folder to get the defaults back. `gsmod_daily-server.toml` holds the world's settings (rewards on/off, time zone and reset hour, streak grace days, week bonus, comeback reward, missions on/off, missions per day) and applies on the next world start. Put a `gsmod_daily-server.toml` in `defaultconfigs/` to use it for new worlds.
 
-Reward day:
+Reward day (a bonus table uses `"bonus": "week"` or `"bonus": "comeback"` instead of `"day"`):
 
 ```json
 { "day": 5,
@@ -64,10 +83,10 @@ Reward day:
   ],
   "rolls": 2,
   "experience": 50,
-  "missions": [ "gsmod:mine_iron_ore" ] }
+  "missions": [ "gsmod_daily:mine_iron_ore" ] }
 ```
 
-Mission (objectives: `mine_block`, `craft_item`, `produce_item` (GS machine output), `use_machine`, `generate_energy` (GS generators), `play_time` (seconds)):
+Mission (objectives: `mine_block`, `craft_item`, `play_time` (seconds), and `produce_item`, `use_machine`, `generate_energy`, which mods such as GS Mod: Tech report):
 
 ```json
 { "objective": "mine_block", "target": "#c:ores/iron", "amount": 32, "weight": 10,
@@ -77,30 +96,30 @@ Mission (objectives: `mine_block`, `craft_item`, `produce_item` (GS machine outp
   "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" } ] }
 ```
 
-Mission ids are `gsmod:<path in daily_missions without .json>`, e.g. `gsmod:compat/mekanism/mine_osmium_ore`.
+Mission ids are `gsmod_daily:<path in daily_missions without .json>`, e.g. `gsmod_daily:compat/mekanism/mine_osmium_ore`. For `use_machine` the target is the machine's block id, e.g. `gsmod:crusher`.
 
 ### Debug commands (operators)
 
 | Command | |
 |---|---|
-| `/daily debug info [players]` | day, streak, cycle day, tier, reset time and today's missions |
+| `/daily debug info [players]` | day, streak, cycle day, tier, reset time and zone, today's missions |
 | `/daily debug setday <players> <day>` | the next claim gives that reward day; missions are re-rolled for it |
 | `/daily debug unclaim <players>` | allow claiming again today, keeping the streak |
-| `/daily debug preview <day>` | chances of every item on that day, plus an example roll |
+| `/daily debug preview <day\|week\|comeback>` | chances of every item on that day or bonus, plus an example roll |
 | `/daily debug give <players> <day>` | hand out a reward day without changing streaks |
 | `/daily debug missions list` | all loaded missions with their days/weekdays |
 | `/daily debug missions reroll <players>` | new missions for today |
 | `/daily debug missions complete <players> [n]` | complete mission n (or all) and pay the reward |
 | `/daily debug missions progress <players> <n> <amount>` | add progress to mission n |
-| `/daily debug reload` | re-read this world's `gsmod` folder |
+| `/daily debug reload` | re-read this world's `gsmod_daily` folder |
+
+### For other mods
+
+`nl.gsmod.daily.api.DailyMissionsApi` lets any mod feed the machine missions (`machineUsed`, `itemProduced`, `energyGenerated`). Only call it when `ModList.get().isLoaded("gsmod_daily")`; see `GSMod-Tech/src/main/java/nl/gsmod/compat/DailyHooks.java` for an example that keeps Daily Rewards optional.
 
 ## Languages
 
-English, Nederlands, Deutsch, Français, Español, Italiano, Português (Brasil), Polski, Русский and 简体中文.
-
-## Configuration
-
-`config/gsmod-common.toml` (or Mods → GS Mod → Config): energy use and production, capacities, upgrade strength and recipe groups. Daily reward and mission settings are per world (see above).
+Both mods: English, Nederlands, Deutsch, Français, Español, Italiano, Português (Brasil), Polski, Русский and 简体中文.
 
 ## Building
 
@@ -108,4 +127,10 @@ English, Nederlands, Deutsch, Français, Español, Italiano, Português (Brasil)
 ./gradlew build
 ```
 
-The jar ends up in `build/libs/`. `./gradlew runGameTestServer` runs the GameTests. `dev_runtime_mods` in `gradle.properties` lists extra mod jars to load in dev runs.
+Builds both jars. Other useful tasks:
+
+- `./gradlew :GSMod-Tech:runGameTestServer` runs the Tech GameTests (Daily Rewards is loaded too, so its tests run with Tech present)
+- `./gradlew :GSMod-DailyRewards:runGameTestServer` runs the Daily Rewards GameTests on their own
+- `./gradlew :GSMod-Tech:runDevCheck` starts a test client that loads `GSMod-Tech/run-devcheck/saves/world`, places the machines, opens the screens, presses the daily buttons and takes screenshots
+
+`dev_runtime_mods` in `gradle.properties` lists extra mod jars (relative to this folder) to load in dev runs.

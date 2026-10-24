@@ -1,0 +1,2 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "ltxi" } ],
+  "title": "mission.gsmod.title.ltxi.craft_circuit_board", "objective": "craft_item", "target": "ltxi:circuit_board", "amount": 4, "weight": 5, "rewards": [ { "id": "minecraft:iron_ingot", "count": 12 } ], "experience": 100 }

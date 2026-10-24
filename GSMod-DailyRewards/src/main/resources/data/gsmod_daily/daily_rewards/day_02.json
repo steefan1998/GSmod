@@ -1,0 +1,14 @@
+{
+  "day": 2,
+  "items": [],
+  "random": [
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "gsmod" } ], "weight": 4, "item": { "id": "gsmod:raw_galvanite" }, "min": 4, "max": 8 },
+    { "weight": 3, "item": { "id": "minecraft:copper_ingot" }, "min": 6, "max": 12 },
+    { "weight": 3, "item": { "id": "minecraft:raw_iron" }, "min": 3, "max": 6 },
+    { "weight": 2, "item": { "id": "minecraft:arrow" }, "min": 16, "max": 24 },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "ae2" } ], "weight": 1, "item": { "id": "ae2:certus_quartz_crystal" }, "min": 2, "max": 4 },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "oritech" } ], "weight": 1, "item": { "id": "oritech:nickel_ingot" }, "min": 4, "max": 8 }
+  ],
+  "rolls": 2,
+  "experience": 25
+}

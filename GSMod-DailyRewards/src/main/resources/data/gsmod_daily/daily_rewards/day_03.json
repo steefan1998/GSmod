@@ -1,0 +1,16 @@
+{
+  "day": 3,
+  "items": [],
+  "random": [
+    { "weight": 3, "item": { "id": "minecraft:redstone" }, "min": 8, "max": 16 },
+    { "weight": 2, "item": { "id": "minecraft:lapis_lazuli" }, "min": 6, "max": 12 },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "gsmod" } ], "weight": 3, "item": { "id": "gsmod:galvanite_ingot" }, "min": 3, "max": 6 },
+    { "weight": 2, "item": { "id": "minecraft:iron_ingot" }, "min": 2, "max": 4 },
+    { "weight": 1, "item": { "id": "minecraft:bucket" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" } ], "weight": 1, "item": { "id": "mekanism:basic_tier_installer" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "enderio" } ], "weight": 1, "item": { "id": "enderio:basic_capacitor" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "powah" } ], "weight": 1, "item": { "id": "powah:capacitor_basic_tiny" } }
+  ],
+  "rolls": 2,
+  "experience": 30
+}

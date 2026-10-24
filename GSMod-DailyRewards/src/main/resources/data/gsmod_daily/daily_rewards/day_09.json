@@ -1,0 +1,16 @@
+{
+  "day": 9,
+  "items": [],
+  "random": [
+    { "weight": 3, "item": { "id": "minecraft:blaze_rod" }, "min": 2, "max": 4 },
+    { "weight": 3, "item": { "id": "minecraft:quartz" }, "min": 8, "max": 16 },
+    { "weight": 2, "item": { "id": "minecraft:experience_bottle" }, "min": 4, "max": 8 },
+    { "weight": 2, "item": { "id": "minecraft:nether_wart" }, "min": 4, "max": 8 },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "gsmod" } ], "weight": 1, "item": { "id": "gsmod:yield_upgrade" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" } ], "weight": 1, "item": { "id": "mekanism:upgrade_energy" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "enderio" } ], "weight": 1, "item": { "id": "enderio:double_layer_capacitor" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "ae2" } ], "weight": 1, "item": { "id": "ae2:fluix_crystal" }, "min": 4, "max": 8 }
+  ],
+  "rolls": 2,
+  "experience": 70
+}

@@ -1,0 +1,20 @@
+{
+  "bonus": "week",
+  "tier": "week",
+  "items": [ { "id": "minecraft:experience_bottle", "count": 8 } ],
+  "random": [
+    { "weight": 3, "item": { "id": "minecraft:golden_apple" }, "min": 2, "max": 3 },
+    { "weight": 3, "item": { "id": "minecraft:name_tag" } },
+    { "weight": 2, "item": { "id": "minecraft:diamond" }, "min": 1, "max": 2 },
+    { "weight": 2, "item": { "id": "minecraft:ender_pearl" }, "min": 4, "max": 8 },
+    { "weight": 2, "item": { "id": "minecraft:firework_rocket" }, "min": 16, "max": 32 },
+    { "weight": 1, "item": { "id": "minecraft:enchanted_book", "components": { "minecraft:stored_enchantments": { "minecraft:mending": 1 } } } },
+    { "weight": 1, "item": { "id": "minecraft:totem_of_undying" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "gsmod" } ], "weight": 2, "item": { "id": "gsmod:speed_upgrade" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" } ], "weight": 1, "item": { "id": "mekanism:upgrade_speed" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "ae2" } ], "weight": 1, "item": { "id": "ae2:speed_card" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "oritech" } ], "weight": 1, "item": { "id": "oritech:machine_speed_addon" } }
+  ],
+  "rolls": 2,
+  "experience": 100
+}

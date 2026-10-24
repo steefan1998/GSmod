@@ -1,0 +1,1 @@
+{ "title": "mission.gsmod.title.mine_coal_ore", "objective": "mine_block", "target": "#c:ores/coal", "days": [ 1, 2, 3, 4 ], "amount": 48, "weight": 10, "rewards": [ { "id": "minecraft:torch", "count": 32 }, { "id": "minecraft:cooked_beef", "count": 8 } ], "experience": 40 }

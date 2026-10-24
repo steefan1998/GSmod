@@ -1,1 +1,0 @@
-{ "title": "mission.gsmod.title.generate_energy", "objective": "generate_energy",  "amount": 10000, "weight": 8, "rewards": [ { "id": "minecraft:coal_block", "count": 2 } ], "experience": 60 }
