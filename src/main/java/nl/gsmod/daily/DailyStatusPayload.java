@@ -13,14 +13,14 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
-import nl.gsmod.Config;
+import nl.gsmod.ServerConfig;
 import nl.gsmod.GSMod;
 
 /**
  * Server → client snapshot for the Daily screen. Display only: the client never decides anything,
  * claiming still goes through the server-side {@code /daily claim} command.
  */
-public record DailyStatusPayload(boolean rewardsEnabled, boolean canClaim, int streak, int nextStreak, long secondsUntilReset,
+public record DailyStatusPayload(boolean rewardsEnabled, boolean canClaim, int streak, int nextStreak, Component nextTier, long secondsUntilReset,
         List<Line> missions) implements CustomPacketPayload {
 
     public record Line(Component title, long progress, long amount, boolean completed) {
@@ -39,6 +39,7 @@ public record DailyStatusPayload(boolean rewardsEnabled, boolean canClaim, int s
             ByteBufCodecs.BOOL, DailyStatusPayload::canClaim,
             ByteBufCodecs.VAR_INT, DailyStatusPayload::streak,
             ByteBufCodecs.VAR_INT, DailyStatusPayload::nextStreak,
+            ComponentSerialization.STREAM_CODEC, DailyStatusPayload::nextTier,
             ByteBufCodecs.VAR_LONG, DailyStatusPayload::secondsUntilReset,
             Line.STREAM_CODEC.apply(ByteBufCodecs.list(64)), DailyStatusPayload::missions,
             DailyStatusPayload::new);
@@ -46,7 +47,7 @@ public record DailyStatusPayload(boolean rewardsEnabled, boolean canClaim, int s
     public static DailyStatusPayload of(ServerPlayer player, Instant now) {
         long today = DailyRewards.today(now);
         DailyRewardData data = DailyRewards.data(player);
-        int grace = Config.DAILY_STREAK_GRACE_DAYS.get();
+        int grace = ServerConfig.DAILY_STREAK_GRACE_DAYS.get();
         // Shown streak drops to 0 once it can no longer be continued.
         int streak = data.canClaim(today) && data.nextStreak(today, grace) == 1 ? 0 : data.streak();
 
@@ -64,8 +65,13 @@ public record DailyStatusPayload(boolean rewardsEnabled, boolean canClaim, int s
                 }
             }
         }
-        return new DailyStatusPayload(Config.DAILY_REWARDS_ENABLED.get(), DailyRewards.canClaim(player, now), streak,
-                data.nextStreak(today, grace), DailyClock.secondsUntilReset(now, Config.DAILY_RESET_HOUR_UTC.get()), List.copyOf(lines));
+        return new DailyStatusPayload(ServerConfig.DAILY_REWARDS_ENABLED.get(), DailyRewards.canClaim(player, now), streak,
+                data.nextStreak(today, grace), nextTier(data.nextStreak(today, grace)), DailyClock.secondsUntilReset(now, ServerConfig.DAILY_RESET_HOUR_UTC.get()), List.copyOf(lines));
+    }
+
+    private static Component nextTier(int streak) {
+        RewardTable table = RewardTableManager.INSTANCE.forStreak(streak);
+        return table == null ? Component.empty() : table.tierName();
     }
 
     @Override

@@ -1,0 +1,17 @@
+{
+  "day": 7,
+  "tier": "diamond",
+  "items": [ { "id": "minecraft:diamond" } ],
+  "random": [
+    { "weight": 4, "item": { "id": "minecraft:diamond" } },
+    { "weight": 3, "item": { "id": "minecraft:emerald" }, "min": 4, "max": 6 },
+    { "weight": 2, "item": { "id": "minecraft:golden_apple" } },
+    { "weight": 2, "item": { "id": "gsmod:efficiency_upgrade" } },
+    { "weight": 1, "item": { "id": "minecraft:diamond_pickaxe" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" } ], "weight": 1, "item": { "id": "mekanism:advanced_tier_installer" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "ae2" } ], "weight": 1, "item": { "id": "ae2:speed_card" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "enderio" } ], "weight": 1, "item": { "id": "enderio:double_layer_capacitor" } }
+  ],
+  "rolls": 1,
+  "experience": 80
+}

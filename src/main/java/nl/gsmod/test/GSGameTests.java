@@ -1,5 +1,7 @@
 package nl.gsmod.test;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.List;
 import java.util.function.Consumer;
@@ -28,6 +30,10 @@ import nl.gsmod.daily.DailyMissions;
 import nl.gsmod.daily.DailyRewards;
 import nl.gsmod.daily.MissionManager;
 import nl.gsmod.daily.MissionObjective;
+import nl.gsmod.daily.RewardTableManager;
+import nl.gsmod.daily.WorldJsonManager;
+import net.minecraft.util.RandomSource;
+import net.neoforged.fml.ModList;
 import nl.gsmod.machine.AlloySmelterBlockEntity;
 import nl.gsmod.machine.CrusherBlockEntity;
 import nl.gsmod.machine.GeneratorBlockEntity;
@@ -50,6 +56,63 @@ public final class GSGameTests {
         FUNCTIONS.register("crusher_needs_energy", () -> GSGameTests::crusherNeedsEnergy);
         FUNCTIONS.register("daily_reward_claim_rules", () -> GSGameTests::dailyRewardClaimRules);
         FUNCTIONS.register("daily_mission_progress", () -> GSGameTests::dailyMissionProgress);
+        FUNCTIONS.register("daily_reward_tiers_and_world_files", () -> GSGameTests::dailyRewardTiersAndWorldFiles);
+        FUNCTIONS.register("daily_missions_per_day", () -> GSGameTests::dailyMissionsPerDay);
+    }
+
+    private static void dailyMissionsPerDay(GameTestHelper helper) {
+        var all = MissionManager.INSTANCE.all();
+        Identifier ironOre = GSMod.id("mine_iron_ore");
+        Identifier galvanite = GSMod.id("mine_galvanite_ore");
+        Identifier weekend = GSMod.id("weekend_play_60_minutes");
+        List<Identifier> forcedDay5 = RewardTableManager.INSTANCE.forStreak(5).missions();
+        helper.assertTrue(forcedDay5.contains(ironOre), "day 5 should force mine_iron_ore, has " + forcedDay5);
+
+        for (int seed = 0; seed < 50; seed++) {
+            var uuid = new java.util.UUID(seed, seed * 31L);
+            // Monday, cycle day 5: forced iron mission first, no early-days or weekend missions.
+            var monday = DailyMissions.pick(uuid, seed, all, 3, forcedDay5, 5, java.time.DayOfWeek.MONDAY)
+                    .stream().map(DailyMissionData.Entry::mission).toList();
+            helper.assertTrue(monday.size() == 3 && monday.get(0).equals(ironOre), "forced mission missing: " + monday);
+            helper.assertTrue(!monday.contains(galvanite) && !monday.contains(weekend), "mission outside its days: " + monday);
+            // Cycle day 2 on a Saturday: galvanite and the weekend mission are both allowed.
+            var saturday = DailyMissions.pick(uuid, seed, all, 20, List.of(), 2, java.time.DayOfWeek.SATURDAY)
+                    .stream().map(DailyMissionData.Entry::mission).toList();
+            helper.assertTrue(saturday.contains(galvanite) && saturday.contains(weekend), "allowed mission missing: " + saturday);
+        }
+        helper.succeed();
+    }
+
+    private static void dailyRewardTiersAndWorldFiles(GameTestHelper helper) {
+        RewardTableManager tables = RewardTableManager.INSTANCE;
+        helper.assertValueEqual(tables.cycleLength(), 10, "cycle length");
+        helper.assertValueEqual(tables.forStreak(5).tier().orElse(""), "iron", "day 5 tier");
+        helper.assertValueEqual(tables.forStreak(7).tier().orElse(""), "diamond", "day 7 tier");
+        helper.assertValueEqual(tables.forStreak(10).tier().orElse(""), "netherite", "day 10 tier");
+        helper.assertValueEqual(tables.forStreak(15).tier().orElse(""), "iron", "day 15 wraps to day 5");
+
+        // Random counts stay within min/max, and two rolls never pick the same entry twice.
+        RandomSource random = RandomSource.create(42);
+        for (int i = 0; i < 200; i++) {
+            List<ItemStack> day5 = tables.forStreak(5).roll(random);
+            helper.assertTrue(day5.size() == 3, "day 5 should give 1 fixed + 2 random stacks, got " + day5);
+            int iron = day5.stream().filter(s -> s.is(Items.IRON_INGOT)).mapToInt(ItemStack::getCount).sum();
+            helper.assertTrue(iron >= 4 && iron <= 12, "day 5 iron out of range: " + iron);
+            long netherite = tables.forStreak(10).roll(random).stream().filter(s -> s.is(Items.NETHERITE_INGOT)).count();
+            helper.assertTrue(netherite <= 1, "too much netherite");
+        }
+
+        // Modded entries are only in the pool while their mod is installed.
+        boolean hasMekanismUpgrade = tables.forStreak(5).random().stream()
+                .anyMatch(r -> r.item().item().getRegisteredName().equals("mekanism:upgrade_speed"));
+        helper.assertValueEqual(hasMekanismUpgrade, ModList.get().isLoaded("mekanism"), "mekanism entry present");
+
+        // The running world got its own editable copies.
+        Path folder = WorldJsonManager.worldFolder(RewardTableManager.FOLDER);
+        helper.assertTrue(folder != null && Files.isRegularFile(folder.resolve("day_05.json")), "world reward files missing in " + folder);
+        Path missions = WorldJsonManager.worldFolder(MissionManager.FOLDER);
+        helper.assertTrue(missions != null && Files.isRegularFile(missions.resolve("mine_iron_ore.json")), "world mission files missing in " + missions);
+        helper.succeed();
     }
 
     private static void dailyRewardClaimRules(GameTestHelper helper) {
@@ -62,7 +125,7 @@ public final class GSGameTests {
         var first = DailyRewards.claim(player, day1);
         helper.assertValueEqual(first.status(), DailyRewards.Status.CLAIMED, "first claim");
         helper.assertValueEqual(first.streak(), 1, "first streak");
-        helper.assertTrue(player.getInventory().countItem(Items.BREAD) >= 8, "day 1 reward not given");
+        helper.assertTrue(player.getInventory().countItem(Items.BREAD) >= 4, "day 1 reward not given");
 
         helper.assertValueEqual(DailyRewards.claim(player, day1Late).status(), DailyRewards.Status.ALREADY_CLAIMED, "same-day claim");
         var second = DailyRewards.claim(player, day2);

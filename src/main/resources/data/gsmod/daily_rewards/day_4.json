@@ -1,1 +1,0 @@
-{ "day": 4, "items": [ { "id": "gsmod:steel_ingot", "count": 6 } ], "random": [ { "weight": 2, "item": { "id": "minecraft:emerald", "count": 2 } }, { "weight": 2, "item": { "id": "minecraft:lapis_lazuli", "count": 12 } }, { "weight": 1, "item": { "id": "minecraft:diamond" } } ], "rolls": 1, "experience": 50 }

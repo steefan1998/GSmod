@@ -5,25 +5,22 @@ import java.util.TreeMap;
 
 import org.jspecify.annotations.Nullable;
 
-import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 import nl.gsmod.GSMod;
 
-/** Loads reward tables from datapacks; reloaded with {@code /reload}. Server-side only. */
-public class RewardTableManager extends SimpleJsonResourceReloadListener<RewardTable> {
+/** Reward tables of the running world ({@code <world>/gsmod/daily_rewards/}). Server-side only. */
+public class RewardTableManager extends WorldJsonManager<RewardTable> {
+    public static final String FOLDER = "daily_rewards";
     public static final RewardTableManager INSTANCE = new RewardTableManager();
 
     private volatile TreeMap<Integer, RewardTable> byDay = new TreeMap<>();
 
     private RewardTableManager() {
-        super(RewardTable.CODEC, FileToIdConverter.json("daily_rewards"));
+        super(RewardTable.CODEC, FOLDER);
     }
 
     @Override
-    protected void apply(Map<Identifier, RewardTable> tables, ResourceManager manager, ProfilerFiller profiler) {
+    protected void accept(Map<Identifier, RewardTable> tables, String source) {
         TreeMap<Integer, RewardTable> map = new TreeMap<>();
         tables.forEach((id, table) -> {
             RewardTable previous = map.put(table.day(), table);
@@ -32,7 +29,7 @@ public class RewardTableManager extends SimpleJsonResourceReloadListener<RewardT
             }
         });
         byDay = map;
-        GSMod.LOGGER.info("Loaded {} daily reward tables (cycle of {} days)", map.size(), cycleLength());
+        GSMod.LOGGER.info("Loaded {} daily reward tables (cycle of {} days) from {}", map.size(), cycleLength(), source);
     }
 
     public int cycleLength() {

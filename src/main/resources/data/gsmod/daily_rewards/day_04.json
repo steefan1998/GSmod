@@ -1,0 +1,15 @@
+{
+  "day": 4,
+  "items": [],
+  "random": [
+    { "weight": 3, "item": { "id": "minecraft:iron_ingot" }, "min": 3, "max": 5 },
+    { "weight": 3, "item": { "id": "minecraft:gold_ingot" }, "min": 2, "max": 4 },
+    { "weight": 2, "item": { "id": "gsmod:galvanite_coil" }, "min": 1, "max": 2 },
+    { "weight": 2, "item": { "id": "minecraft:baked_potato" }, "min": 6, "max": 10 },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "ae2" } ], "weight": 1, "item": { "id": "ae2:basic_card" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "powah" } ], "weight": 1, "item": { "id": "powah:dielectric_paste" }, "min": 4, "max": 8 },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "oritech" } ], "weight": 1, "item": { "id": "oritech:motor" } }
+  ],
+  "rolls": 2,
+  "experience": 35
+}

@@ -1,5 +1,9 @@
 package nl.gsmod.daily;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Collection;
 
@@ -14,15 +18,19 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
+import net.minecraft.world.level.storage.LevelResource;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import nl.gsmod.Config;
+import nl.gsmod.ServerConfig;
 import nl.gsmod.GSMod;
 
 /** Wires daily rewards and missions into the game: commands, datapack loading, login, and progress events. */
@@ -36,6 +44,65 @@ public final class DailyEvents {
         NeoForge.EVENT_BUS.addListener(DailyEvents::onBlockDrops);
         NeoForge.EVENT_BUS.addListener(DailyEvents::onCrafted);
         NeoForge.EVENT_BUS.addListener(DailyEvents::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(DailyEvents::onServerStarting);
+        NeoForge.EVENT_BUS.addListener(DailyEvents::onServerStopped);
+    }
+
+    /** Switch reward tables and missions to this world's own files in {@code <world>/gsmod/}. */
+    private static void onServerStarting(ServerStartingEvent event) {
+        Path world = event.getServer().getWorldPath(LevelResource.ROOT).normalize();
+        WorldJsonManager.setWorld(world);
+        RewardTableManager.INSTANCE.refresh();
+        MissionManager.INSTANCE.refresh();
+        writeWorldExtras(world);
+    }
+
+    /**
+     * NeoForge keeps server configs in the global config folder; a copy in {@code <world>/serverconfig/}
+     * overrides it for that world. Put that copy in place, so each world's daily settings sit next to its
+     * reward and mission files.
+     */
+    private static void writeWorldExtras(Path world) {
+        try {
+            Path worldConfig = world.resolve("serverconfig").resolve(GSMod.MODID + "-server.toml");
+            Path globalConfig = FMLPaths.CONFIGDIR.get().resolve(GSMod.MODID + "-server.toml");
+            if (!Files.exists(worldConfig) && Files.isRegularFile(globalConfig)) {
+                Files.createDirectories(worldConfig.getParent());
+                Files.copy(globalConfig, worldConfig);
+                GSMod.LOGGER.info("Created {} (edit it to change this world's daily settings; applies on the next world start)", worldConfig);
+            }
+            Path readme = world.resolve(GSMod.MODID).resolve("README.txt");
+            if (!Files.exists(readme)) {
+                Files.createDirectories(readme.getParent());
+                Files.writeString(readme, WORLD_README, StandardCharsets.UTF_8);
+            }
+        } catch (IOException e) {
+            GSMod.LOGGER.warn("Could not write GS Mod world files to {}", world, e);
+        }
+    }
+
+    private static final String WORLD_README = """
+            GS Mod - daily rewards and missions for this world
+            ==================================================
+
+            daily_rewards/   One JSON file per streak day. The highest "day" is the cycle length.
+                             "tier" is shown to players (iron, diamond, netherite, ...).
+                             "items" are always given, "rolls" picks from "random" by "weight",
+                             "min"/"max" give a random stack size.
+            daily_missions/  One JSON file per mission. Each day every player gets a few of them,
+                             picked by "weight". Files with "neoforge:conditions" only count while
+                             that mod is installed.
+
+            Delete a file to remove it, add files to add rewards or missions. Changes apply with
+            /reload or on the next world start. Delete a whole folder to get the defaults back.
+
+            ../serverconfig/gsmod-server.toml holds this world's settings: rewards on/off, reset hour
+            (UTC), streak grace days, missions on/off and missions per day. Changes there apply on the
+            next world start.
+            """;
+
+    private static void onServerStopped(ServerStoppedEvent event) {
+        WorldJsonManager.setWorld(null);
     }
 
     private static void registerPayloads(RegisterPayloadHandlersEvent event) {
@@ -58,6 +125,7 @@ public final class DailyEvents {
                 .then(Commands.literal("status").executes(DailyEvents::status))
                 .then(Commands.literal("missions").executes(DailyEvents::missions))
                 .then(Commands.literal("menu").executes(DailyEvents::menu))
+                .then(DailyDebugCommands.build())
                 .then(Commands.literal("reset")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(Commands.argument("targets", EntityArgument.players()).executes(DailyEvents::reset))));
@@ -78,6 +146,9 @@ public final class DailyEvents {
         DailyStatusPayload status = DailyStatusPayload.of(player, now);
         if (status.canClaim()) {
             player.sendSystemMessage(Component.translatable("message.gsmod.daily.available", status.nextStreak()).withStyle(ChatFormatting.GREEN));
+            if (!status.nextTier().getString().isEmpty()) {
+                player.sendSystemMessage(Component.translatable("message.gsmod.daily.tier", status.nextTier()).withStyle(ChatFormatting.GOLD));
+            }
         } else {
             player.sendSystemMessage(Component.translatable("message.gsmod.daily.already",
                     DailyClock.formatDuration(status.secondsUntilReset())).withStyle(ChatFormatting.YELLOW));
@@ -133,7 +204,7 @@ public final class DailyEvents {
     // --- Events ---
 
     private static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player && Config.DAILY_NOTIFY_ON_LOGIN.get()
+        if (event.getEntity() instanceof ServerPlayer player && ServerConfig.DAILY_NOTIFY_ON_LOGIN.get()
                 && DailyRewards.canClaim(player, Instant.now()) && RewardTableManager.INSTANCE.cycleLength() > 0) {
             player.sendSystemMessage(Component.translatable("message.gsmod.daily.login").withStyle(ChatFormatting.GOLD));
         }

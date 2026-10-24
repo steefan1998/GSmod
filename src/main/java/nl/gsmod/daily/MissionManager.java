@@ -2,27 +2,24 @@ package nl.gsmod.daily;
 
 import java.util.Map;
 
-import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 import nl.gsmod.GSMod;
 
-/** Loads mission definitions from datapacks; reloaded with {@code /reload}. Server-side only. */
-public class MissionManager extends SimpleJsonResourceReloadListener<Mission> {
+/** Missions of the running world ({@code <world>/gsmod/daily_missions/}). Server-side only. */
+public class MissionManager extends WorldJsonManager<Mission> {
+    public static final String FOLDER = "daily_missions";
     public static final MissionManager INSTANCE = new MissionManager();
 
     private volatile Map<Identifier, Mission> missions = Map.of();
 
     private MissionManager() {
-        super(Mission.CODEC, FileToIdConverter.json("daily_missions"));
+        super(Mission.CODEC, FOLDER);
     }
 
     @Override
-    protected void apply(Map<Identifier, Mission> loaded, ResourceManager manager, ProfilerFiller profiler) {
+    protected void accept(Map<Identifier, Mission> loaded, String source) {
         missions = Map.copyOf(loaded);
-        GSMod.LOGGER.info("Loaded {} daily missions", missions.size());
+        GSMod.LOGGER.info("Loaded {} daily missions from {}", missions.size(), source);
     }
 
     public Map<Identifier, Mission> all() {

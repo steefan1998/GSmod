@@ -1,1 +1,0 @@
-{ "day": 6, "items": [ { "id": "minecraft:golden_apple", "count": 2 } ], "random": [ { "weight": 1, "item": { "id": "gsmod:speed_upgrade" } }, { "weight": 1, "item": { "id": "gsmod:efficiency_upgrade" } }, { "weight": 1, "item": { "id": "gsmod:capacity_upgrade" } } ], "rolls": 1, "experience": 80 }

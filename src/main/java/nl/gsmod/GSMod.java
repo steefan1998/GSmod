@@ -56,6 +56,7 @@ public class GSMod {
         DailyEvents.register(modBus);
 
         container.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        container.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
     }
 
     public static Identifier id(String path) {

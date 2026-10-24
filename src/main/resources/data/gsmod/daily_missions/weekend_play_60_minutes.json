@@ -1,0 +1,1 @@
+{ "title": "mission.gsmod.title.weekend_play_60_minutes", "objective": "play_time", "amount": 3600, "weight": 12, "weekdays": [ "saturday", "sunday" ], "rewards": [ { "id": "minecraft:diamond" }, { "id": "minecraft:golden_apple" } ], "experience": 100 }

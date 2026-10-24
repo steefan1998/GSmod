@@ -1,9 +1,12 @@
 package nl.gsmod.daily;
 
+import java.time.DayOfWeek;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,7 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import nl.gsmod.machine.MachineType;
 
 /**
- * A mission definition, loaded from {@code data/<namespace>/daily_missions/*.json}.
+ * A mission definition, loaded from {@code <world>/gsmod/daily_missions/*.json}.
  *
  * <pre>
  * {
@@ -25,21 +28,38 @@ import nl.gsmod.machine.MachineType;
  *   "target": "#c:ores/iron",           // id or #tag; depends on the objective, optional
  *   "amount": 32,
  *   "weight": 10,                       // how likely it is to be picked for a day
+ *   "days": [ 5, 10 ],                  // optional: only on these days of the reward cycle
+ *   "weekdays": [ "saturday", "sunday" ], // optional: only on these weekdays (UTC reward day)
  *   "title": "Mine 32 iron ore",        // optional; generated from objective/target/amount otherwise
  *   "rewards": [ { "id": "minecraft:emerald", "count": 2 } ],
  *   "experience": 50
  * }
  * </pre>
  */
-public record Mission(MissionObjective objective, Optional<String> target, long amount, int weight, Optional<String> title,
-        List<ItemStackTemplate> rewards, int experience) {
+public record Mission(MissionObjective objective, Optional<String> target, long amount, int weight, List<Integer> days,
+        List<DayOfWeek> weekdays, Optional<String> title, List<ItemStackTemplate> rewards, int experience) {
+
+    private static final Codec<DayOfWeek> WEEKDAY_CODEC = Codec.STRING.comapFlatMap(s -> {
+        try {
+            return DataResult.success(DayOfWeek.valueOf(s.toUpperCase(Locale.ROOT)));
+        } catch (IllegalArgumentException e) {
+            return DataResult.error(() -> "Unknown weekday: " + s);
+        }
+    }, d -> d.name().toLowerCase(Locale.ROOT));
+
+    /** Whether this mission may be handed out on this day of the reward cycle and weekday. */
+    public boolean availableOn(int cycleDay, DayOfWeek weekday) {
+        return (days.isEmpty() || days.contains(cycleDay)) && (weekdays.isEmpty() || weekdays.contains(weekday));
+    }
 
     public static final Codec<Mission> CODEC = RecordCodecBuilder.create(i -> i.group(
             MissionObjective.CODEC.fieldOf("objective").forGetter(Mission::objective),
             Codec.STRING.optionalFieldOf("target").forGetter(Mission::target),
-            Codec.LONG.validate(v -> v > 0 ? com.mojang.serialization.DataResult.success(v)
-                    : com.mojang.serialization.DataResult.error(() -> "amount must be positive")).fieldOf("amount").forGetter(Mission::amount),
+            Codec.LONG.validate(v -> v > 0 ? DataResult.success(v)
+                    : DataResult.error(() -> "amount must be positive")).fieldOf("amount").forGetter(Mission::amount),
             Codec.intRange(1, 10_000).optionalFieldOf("weight", 10).forGetter(Mission::weight),
+            Codec.intRange(1, 3650).listOf().optionalFieldOf("days", List.of()).forGetter(Mission::days),
+            WEEKDAY_CODEC.listOf().optionalFieldOf("weekdays", List.of()).forGetter(Mission::weekdays),
             Codec.STRING.optionalFieldOf("title").forGetter(Mission::title),
             ItemStackTemplate.CODEC.listOf().optionalFieldOf("rewards", List.of()).forGetter(Mission::rewards),
             Codec.intRange(0, Integer.MAX_VALUE).optionalFieldOf("experience", 0).forGetter(Mission::experience)

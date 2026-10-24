@@ -1,0 +1,12 @@
+{
+  "day": 1,
+  "items": [ { "id": "minecraft:bread", "count": 4 } ],
+  "random": [
+    { "weight": 4, "item": { "id": "minecraft:coal" }, "min": 8, "max": 16 },
+    { "weight": 3, "item": { "id": "minecraft:oak_log" }, "min": 8, "max": 16 },
+    { "weight": 3, "item": { "id": "minecraft:torch" }, "min": 16, "max": 32 },
+    { "weight": 2, "item": { "id": "minecraft:cooked_beef" }, "min": 4, "max": 8 }
+  ],
+  "rolls": 2,
+  "experience": 20
+}

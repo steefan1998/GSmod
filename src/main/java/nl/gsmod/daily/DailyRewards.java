@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import nl.gsmod.Config;
+import nl.gsmod.ServerConfig;
 import nl.gsmod.GSMod;
 
 /**
@@ -28,14 +28,14 @@ public final class DailyRewards {
 
     public enum Status { CLAIMED, ALREADY_CLAIMED, DISABLED, NO_REWARDS }
 
-    public record ClaimResult(Status status, int streak, List<ItemStack> items, int experience) {
+    public record ClaimResult(Status status, int streak, Component tier, List<ItemStack> items, int experience) {
         static ClaimResult of(Status status) {
-            return new ClaimResult(status, 0, List.of(), 0);
+            return new ClaimResult(status, 0, Component.empty(), List.of(), 0);
         }
     }
 
     public static long today(Instant now) {
-        return DailyClock.day(now, Config.DAILY_RESET_HOUR_UTC.get());
+        return DailyClock.day(now, ServerConfig.DAILY_RESET_HOUR_UTC.get());
     }
 
     public static DailyRewardData data(ServerPlayer player) {
@@ -43,11 +43,11 @@ public final class DailyRewards {
     }
 
     public static boolean canClaim(ServerPlayer player, Instant now) {
-        return Config.DAILY_REWARDS_ENABLED.get() && data(player).canClaim(today(now));
+        return ServerConfig.DAILY_REWARDS_ENABLED.get() && data(player).canClaim(today(now));
     }
 
     public static ClaimResult claim(ServerPlayer player, Instant now) {
-        if (!Config.DAILY_REWARDS_ENABLED.get()) {
+        if (!ServerConfig.DAILY_REWARDS_ENABLED.get()) {
             return ClaimResult.of(Status.DISABLED);
         }
         long today = today(now);
@@ -55,7 +55,7 @@ public final class DailyRewards {
         if (!data.canClaim(today)) {
             return ClaimResult.of(Status.ALREADY_CLAIMED);
         }
-        DailyRewardData updated = data.claimed(today, Config.DAILY_STREAK_GRACE_DAYS.get());
+        DailyRewardData updated = data.claimed(today, ServerConfig.DAILY_STREAK_GRACE_DAYS.get());
         RewardTable table = RewardTableManager.INSTANCE.forStreak(updated.streak());
         if (table == null) {
             return ClaimResult.of(Status.NO_REWARDS);
@@ -65,13 +65,16 @@ public final class DailyRewards {
         player.setData(DATA, updated);
         List<ItemStack> items = table.roll(player.getRandom());
         Rewards.give(player, items, table.experience());
-        return new ClaimResult(Status.CLAIMED, updated.streak(), items, table.experience());
+        return new ClaimResult(Status.CLAIMED, updated.streak(), table.tierName(), items, table.experience());
     }
 
     public static void sendResult(ServerPlayer player, ClaimResult result, Instant now) {
         switch (result.status()) {
             case CLAIMED -> {
                 player.sendSystemMessage(Component.translatable("message.gsmod.daily.claimed", result.streak()).withStyle(ChatFormatting.GREEN));
+                if (!result.tier().getString().isEmpty()) {
+                    player.sendSystemMessage(Component.translatable("message.gsmod.daily.tier", result.tier()).withStyle(ChatFormatting.GOLD));
+                }
                 for (ItemStack stack : result.items()) {
                     player.sendSystemMessage(Component.literal(" + " + stack.getCount() + "x ").append(stack.getHoverName()).withStyle(ChatFormatting.GRAY));
                 }
@@ -80,7 +83,7 @@ public final class DailyRewards {
                 }
             }
             case ALREADY_CLAIMED -> player.sendSystemMessage(Component.translatable("message.gsmod.daily.already",
-                    DailyClock.formatDuration(DailyClock.secondsUntilReset(now, Config.DAILY_RESET_HOUR_UTC.get()))).withStyle(ChatFormatting.YELLOW));
+                    DailyClock.formatDuration(DailyClock.secondsUntilReset(now, ServerConfig.DAILY_RESET_HOUR_UTC.get()))).withStyle(ChatFormatting.YELLOW));
             case DISABLED -> player.sendSystemMessage(Component.translatable("message.gsmod.daily.disabled").withStyle(ChatFormatting.RED));
             case NO_REWARDS -> player.sendSystemMessage(Component.translatable("message.gsmod.daily.empty").withStyle(ChatFormatting.RED));
         }

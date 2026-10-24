@@ -40,7 +40,7 @@ public class DailyScreen extends Screen {
     }
 
     private int panelHeight() {
-        return 92 + Math.max(1, status.missions().size()) * ROW;
+        return 101 + Math.max(1, status.missions().size()) * ROW;
     }
 
     private int left() {
@@ -79,14 +79,18 @@ public class DailyScreen extends Screen {
         if (status.rewardsEnabled()) {
             graphics.text(font, Component.translatable("screen.gsmod.daily.streak", status.streak()), x + 8, y + 24, 0xFFFFFFFF);
             graphics.text(font, Component.translatable("screen.gsmod.daily.next", status.nextStreak()), x + 8, y + 35, 0xFFAAAAAA);
+            // Own line, so long tier names never run under the claim button.
+            if (!status.nextTier().getString().isEmpty()) {
+                graphics.text(font, Component.literal("★ ").append(status.nextTier()), x + 8, y + 46, 0xFFFFD83A);
+            }
         } else {
             graphics.text(font, Component.translatable("screen.gsmod.daily.disabled"), x + 8, y + 28, 0xFFFF6060);
         }
         long elapsed = (System.currentTimeMillis() - receivedAt) / 1000;
         long left = Math.max(0, status.secondsUntilReset() - elapsed);
-        graphics.text(font, Component.translatable("screen.gsmod.daily.reset", DailyClock.formatDuration(left)), x + 8, y + 50, 0xFF8899AA);
+        graphics.text(font, Component.translatable("screen.gsmod.daily.reset", DailyClock.formatDuration(left)), x + 8, y + 59, 0xFF8899AA);
 
-        int my = y + 68;
+        int my = y + 77;
         graphics.horizontalLine(x + 8, x + WIDTH - 8, my - 4, BORDER);
         graphics.text(font, Component.translatable("screen.gsmod.daily.missions").withStyle(ChatFormatting.BOLD), x + 8, my, 0xFFFFFFFF);
         my += 14;

@@ -68,7 +68,20 @@ public final class DevCheck {
             case 480 -> shot(mc, "gs_7_daily_claimed");
             case 490 -> mc.setScreen(null);
             case 520 -> shot(mc, "gs_8_chat_after_claim");
-            case 540 -> mc.stop();
+            case 530 -> {
+                mc.gui.getChat().clearMessages(false);
+                command(mc, "daily debug preview 10");
+            }
+            case 570 -> shot(mc, "gs_9_debug_preview_day10");
+            case 580 -> {
+                mc.gui.getChat().clearMessages(false);
+                command(mc, "daily debug setday @s 5");
+                command(mc, "daily debug info");
+            }
+            case 620 -> shot(mc, "gs_10_debug_info_day5");
+            case 630 -> command(mc, "daily menu");
+            case 670 -> shot(mc, "gs_11_daily_screen_iron_tier");
+            case 690 -> mc.stop();
             default -> {
             }
         }
@@ -184,6 +197,11 @@ public final class DevCheck {
         mc.screen.children().stream().filter(c -> c instanceof Button)
                 .forEach(c -> LOGGER.info("DevCheck available '{}'", ((Button) c).getMessage().getString()));
         LOGGER.error("DevCheck button '{}' not found", label);
+    }
+
+    private static void command(Minecraft mc, String command) {
+        LOGGER.info("DevCheck command /{}", command);
+        mc.player.connection.sendCommand(command);
     }
 
     private static void shot(Minecraft mc, String name) {

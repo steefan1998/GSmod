@@ -45,14 +45,6 @@ public final class Config {
     public static final ModConfigSpec.BooleanValue MEKANISM_RECIPES;
     public static final ModConfigSpec.BooleanValue ENDERIO_RECIPES;
 
-    // --- Daily rewards & missions ---
-    public static final ModConfigSpec.BooleanValue DAILY_REWARDS_ENABLED;
-    public static final ModConfigSpec.IntValue DAILY_RESET_HOUR_UTC;
-    public static final ModConfigSpec.IntValue DAILY_STREAK_GRACE_DAYS;
-    public static final ModConfigSpec.BooleanValue DAILY_NOTIFY_ON_LOGIN;
-    public static final ModConfigSpec.BooleanValue DAILY_MISSIONS_ENABLED;
-    public static final ModConfigSpec.IntValue DAILY_MISSIONS_PER_DAY;
-
     static {
         BUILDER.comment("Combustion Generator").push("generator");
         GENERATOR_FE_PER_TICK = BUILDER.comment("FE produced per tick while burning")
@@ -117,22 +109,6 @@ public final class Config {
                 .define("mekanismRecipes", true);
         ENDERIO_RECIPES = BUILDER.comment("Add compatibility recipes when Ender IO is installed")
                 .define("enderioRecipes", true);
-        BUILDER.pop();
-
-        BUILDER.comment("Daily login rewards and daily missions. Reward tables and missions are datapack files:",
-                "data/<namespace>/daily_rewards/*.json and data/<namespace>/daily_missions/*.json").push("daily");
-        DAILY_REWARDS_ENABLED = BUILDER.comment("Allow players to claim a daily reward with /daily")
-                .define("rewardsEnabled", true);
-        DAILY_RESET_HOUR_UTC = BUILDER.comment("Hour (UTC) at which a new day starts. UTC is used so the reset is the same for everyone, whatever their time zone.")
-                .defineInRange("resetHourUtc", 0, 0, 23);
-        DAILY_STREAK_GRACE_DAYS = BUILDER.comment("Days a player may miss without losing their streak")
-                .defineInRange("streakGraceDays", 0, 0, 30);
-        DAILY_NOTIFY_ON_LOGIN = BUILDER.comment("Tell players on login when a reward is waiting")
-                .define("notifyOnLogin", true);
-        DAILY_MISSIONS_ENABLED = BUILDER.comment("Give players daily missions")
-                .define("missionsEnabled", true);
-        DAILY_MISSIONS_PER_DAY = BUILDER.comment("How many missions each player gets per day")
-                .defineInRange("missionsPerDay", 3, 1, 20);
         BUILDER.pop();
     }
 
