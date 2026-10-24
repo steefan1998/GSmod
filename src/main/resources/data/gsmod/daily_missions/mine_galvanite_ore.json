@@ -1,0 +1,1 @@
+{ "title": "mission.gsmod.title.mine_galvanite_ore", "objective": "mine_block", "target": "#c:ores/galvanite", "amount": 16, "weight": 10, "rewards": [ { "id": "gsmod:galvanite_ingot", "count": 4 } ], "experience": 60 }

@@ -1,0 +1,1 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" }, { "type": "gsmod:config", "option": "mekanism_recipes" } ], "type": "gsmod:crushing", "ingredient": "#c:ores/osmium", "result": { "id": "mekanism:dust_osmium", "count": 2 }, "bonus_chance": 0.1, "processing_time": 200 }

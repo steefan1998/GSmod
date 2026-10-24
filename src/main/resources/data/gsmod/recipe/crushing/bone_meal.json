@@ -1,0 +1,1 @@
+{  "type": "gsmod:crushing", "ingredient": "minecraft:bone", "result": { "id": "minecraft:bone_meal", "count": 5 }, "bonus_chance": 0, "processing_time": 80 }

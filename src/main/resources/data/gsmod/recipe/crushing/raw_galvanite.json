@@ -1,0 +1,1 @@
+{ "neoforge:conditions": [ { "type": "gsmod:config", "option": "ore_doubling" } ], "type": "gsmod:crushing", "ingredient": "#c:raw_materials/galvanite", "result": { "id": "gsmod:galvanite_dust", "count": 1 }, "bonus_chance": 0.33, "processing_time": 150 }

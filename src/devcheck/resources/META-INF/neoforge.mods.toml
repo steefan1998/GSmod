@@ -1,0 +1,7 @@
+license = "All Rights Reserved"
+
+# Dev-only test driver, never part of the release jar. Run: ./gradlew runDevCheck
+[[mods]]
+modId = "gsmod_devcheck"
+version = "1.0.0"
+displayName = "GS Mod Dev Check"

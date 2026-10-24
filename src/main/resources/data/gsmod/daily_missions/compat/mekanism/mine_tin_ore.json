@@ -1,0 +1,2 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" } ],
+  "title": "mission.gsmod.title.mekanism.mine_tin_ore", "objective": "mine_block", "target": "#c:ores/tin", "amount": 24, "weight": 6, "rewards": [ { "id": "minecraft:emerald", "count": 3 } ], "experience": 60 }

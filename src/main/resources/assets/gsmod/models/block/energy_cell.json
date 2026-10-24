@@ -1,0 +1,1 @@
+{ "parent": "minecraft:block/orientable", "textures": { "top": "gsmod:block/energy_cell_top", "front": "gsmod:block/energy_cell_front", "side": "gsmod:block/energy_cell_side" } }

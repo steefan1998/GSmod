@@ -1,0 +1,2 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "ltxi" } ],
+  "title": "mission.gsmod.title.ltxi.mine_silver_ore", "objective": "mine_block", "target": "#c:ores/silver", "amount": 16, "weight": 6, "rewards": [ { "id": "minecraft:emerald", "count": 3 } ], "experience": 60 }

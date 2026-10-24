@@ -1,0 +1,1 @@
+{ "neoforge:conditions": [ { "type": "gsmod:config", "option": "steel_alloying" } ], "type": "gsmod:alloying", "first": { "ingredient": "#c:ingots/iron", "count": 2 }, "second": { "ingredient": "#c:dusts/galvanite", "count": 1 }, "result": { "id": "gsmod:steel_ingot", "count": 2 }, "processing_time": 300 }

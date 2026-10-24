@@ -1,0 +1,1 @@
+{ "title": "mission.gsmod.title.produce_steel", "objective": "produce_item", "target": "#c:ingots/steel", "amount": 64, "weight": 6, "rewards": [ { "id": "gsmod:speed_upgrade" } ], "experience": 120 }

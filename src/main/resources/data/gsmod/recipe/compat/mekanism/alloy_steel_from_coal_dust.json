@@ -1,0 +1,1 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" }, { "type": "gsmod:config", "option": "mekanism_recipes" } ], "type": "gsmod:alloying", "first": { "ingredient": "#c:ingots/iron", "count": 1 }, "second": { "ingredient": "#c:dusts/coal", "count": 2 }, "result": { "id": "gsmod:steel_ingot", "count": 1 }, "processing_time": 300 }

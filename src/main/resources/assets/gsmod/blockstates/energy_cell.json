@@ -1,0 +1,6 @@
+{ "variants": {
+  "facing=north": { "model": "gsmod:block/energy_cell" },
+  "facing=east": { "model": "gsmod:block/energy_cell", "y": 90 },
+  "facing=south": { "model": "gsmod:block/energy_cell", "y": 180 },
+  "facing=west": { "model": "gsmod:block/energy_cell", "y": 270 }
+} }

@@ -1,0 +1,2 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "tconstruct" } ],
+  "title": "mission.gsmod.title.tconstruct.mine_cobalt_ore", "objective": "mine_block", "target": "#c:ores/cobalt", "amount": 16, "weight": 6, "rewards": [ { "id": "minecraft:diamond" } ], "experience": 120 }

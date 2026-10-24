@@ -1,0 +1,1 @@
+{ "title": "mission.gsmod.title.mine_stone", "objective": "mine_block", "target": "#minecraft:base_stone_overworld", "amount": 256, "weight": 6, "rewards": [ { "id": "minecraft:torch", "count": 32 } ], "experience": 40 }

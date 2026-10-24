@@ -1,0 +1,1 @@
+{ "neoforge:conditions": [ { "type": "gsmod:config", "option": "ore_doubling" } ], "type": "gsmod:crushing", "ingredient": "#c:ores/copper", "result": { "id": "minecraft:raw_copper", "count": 5 }, "bonus_chance": 0.1, "processing_time": 200 }

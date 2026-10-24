@@ -1,0 +1,1 @@
+{ "day": 2, "items": [ { "id": "gsmod:raw_galvanite", "count": 8 } ], "random": [ { "weight": 3, "item": { "id": "minecraft:iron_ingot", "count": 6 } }, { "weight": 1, "item": { "id": "minecraft:gold_ingot", "count": 3 } } ], "rolls": 1, "experience": 30 }

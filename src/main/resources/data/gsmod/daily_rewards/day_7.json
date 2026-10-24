@@ -1,0 +1,1 @@
+{ "day": 7, "items": [ { "id": "minecraft:diamond", "count": 2 }, { "id": "gsmod:steel_block", "count": 1 } ], "random": [ { "weight": 1, "item": { "id": "gsmod:yield_upgrade" } }, { "weight": 2, "item": { "id": "gsmod:speed_upgrade" } } ], "rolls": 1, "experience": 150 }

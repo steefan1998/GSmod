@@ -1,0 +1,1 @@
+{  "type": "gsmod:alloying", "first": { "ingredient": "#c:dusts/steel", "count": 1 }, "second": { "ingredient": "minecraft:coal", "count": 1 }, "result": { "id": "gsmod:steel_ingot", "count": 1 }, "processing_time": 150 }

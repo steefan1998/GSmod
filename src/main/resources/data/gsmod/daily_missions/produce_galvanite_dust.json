@@ -1,0 +1,1 @@
+{ "title": "mission.gsmod.title.produce_galvanite_dust", "objective": "produce_item", "target": "#c:dusts/galvanite", "amount": 32, "weight": 8, "rewards": [ { "id": "minecraft:redstone", "count": 24 } ], "experience": 60 }

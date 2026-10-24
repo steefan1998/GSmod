@@ -1,0 +1,1 @@
+{ "type": "minecraft:crafting_shaped", "category": "redstone", "pattern": ["ICI","FMF","ICI"], "key": { "I": "#c:ingots/iron", "C": "gsmod:galvanite_coil", "M": "gsmod:machine_frame", "F": "minecraft:furnace" }, "result": { "id": "gsmod:alloy_smelter", "count": 1 } }

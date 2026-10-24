@@ -1,0 +1,1 @@
+{ "type": "minecraft:crafting_shaped", "category": "redstone", "pattern": ["SRS","RXR","SRS"], "key": { "S": "#c:ingots/steel", "R": "#c:dusts/redstone", "X": "#c:gems/emerald" }, "result": { "id": "gsmod:yield_upgrade", "count": 1 } }

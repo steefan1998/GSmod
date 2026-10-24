@@ -1,0 +1,2 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "ae2" } ],
+  "title": "mission.gsmod.title.ae2.craft_interface", "objective": "craft_item", "target": "ae2:interface", "amount": 2, "weight": 4, "rewards": [ { "id": "gsmod:speed_upgrade" } ], "experience": 120 }

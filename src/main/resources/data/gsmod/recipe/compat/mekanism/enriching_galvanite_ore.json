@@ -1,0 +1,1 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" }, { "type": "gsmod:config", "option": "mekanism_recipes" } ], "type": "mekanism:enriching", "input": { "count": 1, "ingredient": "#c:ores/galvanite" }, "output": { "count": 2, "id": "gsmod:galvanite_dust" } }

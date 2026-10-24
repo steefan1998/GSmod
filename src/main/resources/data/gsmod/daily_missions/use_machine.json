@@ -1,0 +1,1 @@
+{ "title": "mission.gsmod.title.use_machine", "objective": "use_machine",  "amount": 100, "weight": 8, "rewards": [ { "id": "gsmod:efficiency_upgrade" } ], "experience": 100 }

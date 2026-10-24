@@ -1,0 +1,1 @@
+{  "type": "gsmod:crushing", "ingredient": "#c:rods/blaze", "result": { "id": "minecraft:blaze_powder", "count": 4 }, "bonus_chance": 0, "processing_time": 100 }

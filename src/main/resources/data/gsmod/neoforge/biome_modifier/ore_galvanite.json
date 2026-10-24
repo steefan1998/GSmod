@@ -1,0 +1,1 @@
+{ "type": "neoforge:add_features", "biomes": "#minecraft:is_overworld", "features": "gsmod:ore_galvanite", "step": "underground_ores" }

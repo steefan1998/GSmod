@@ -1,0 +1,1 @@
+{ "type": "minecraft:smelting", "category": "misc", "ingredient": "gsmod:raw_galvanite", "result": { "id": "gsmod:galvanite_ingot" }, "cookingtime": 200, "experience": 0.7 }

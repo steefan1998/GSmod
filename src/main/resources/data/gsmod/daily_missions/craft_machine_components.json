@@ -1,0 +1,1 @@
+{ "title": "mission.gsmod.title.craft_machine_components", "objective": "craft_item", "target": "#gsmod:machine_components", "amount": 16, "weight": 5, "rewards": [ { "id": "gsmod:capacity_upgrade" } ], "experience": 100 }

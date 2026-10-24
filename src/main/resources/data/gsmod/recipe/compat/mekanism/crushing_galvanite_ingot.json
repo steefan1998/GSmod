@@ -1,0 +1,1 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" }, { "type": "gsmod:config", "option": "mekanism_recipes" } ], "type": "mekanism:crushing", "input": { "count": 1, "ingredient": "#c:ingots/galvanite" }, "output": { "count": 1, "id": "gsmod:galvanite_dust" } }

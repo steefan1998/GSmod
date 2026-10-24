@@ -1,0 +1,1 @@
+{ "type": "minecraft:crafting_shaped", "category": "redstone", "pattern": ["SRS","CMC","SRS"], "key": { "S": "#c:ingots/steel", "R": "#c:storage_blocks/redstone", "C": "gsmod:galvanite_coil", "M": "gsmod:machine_frame" }, "result": { "id": "gsmod:energy_cell", "count": 1 } }

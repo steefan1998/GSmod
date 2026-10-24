@@ -1,0 +1,1 @@
+{  "type": "gsmod:crushing", "ingredient": "#c:gravels", "result": { "id": "minecraft:sand", "count": 1 }, "bonus_chance": 0, "processing_time": 80 }

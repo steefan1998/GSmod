@@ -1,0 +1,1 @@
+{ "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "enderio" }, { "type": "gsmod:config", "option": "enderio_recipes" } ], "type": "enderio:sag_milling", "bonus": "none", "energy": 2400, "input": "#c:ingots/steel", "outputs": [ { "item": { "id": "gsmod:steel_dust" } } ] }

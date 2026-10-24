@@ -1,0 +1,1 @@
+{ "title": "mission.gsmod.title.mine_iron_ore", "objective": "mine_block", "target": "#c:ores/iron", "amount": 32, "weight": 10, "rewards": [ { "id": "minecraft:iron_ingot", "count": 8 } ], "experience": 60 }

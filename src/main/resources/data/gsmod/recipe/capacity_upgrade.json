@@ -1,0 +1,1 @@
+{ "type": "minecraft:crafting_shaped", "category": "redstone", "pattern": ["SRS","RXR","SRS"], "key": { "S": "#c:ingots/steel", "R": "#c:dusts/redstone", "X": "#c:storage_blocks/redstone" }, "result": { "id": "gsmod:capacity_upgrade", "count": 1 } }

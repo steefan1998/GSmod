@@ -1,0 +1,1 @@
+{ "title": "mission.gsmod.title.play_30_minutes", "objective": "play_time",  "amount": 1800, "weight": 10, "rewards": [ { "id": "minecraft:golden_carrot", "count": 8 } ], "experience": 50 }

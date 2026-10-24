@@ -1,0 +1,1 @@
+{ "type": "minecraft:crafting_shaped", "category": "redstone", "pattern": ["IFI","CMC","IPI"], "key": { "I": "#c:ingots/iron", "F": "minecraft:flint", "C": "gsmod:galvanite_coil", "M": "gsmod:machine_frame", "P": "minecraft:piston" }, "result": { "id": "gsmod:crusher", "count": 1 } }
