@@ -1,5 +1,6 @@
 package nl.gsmod.daily;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -27,24 +28,47 @@ public class RewardTableManager extends WorldJsonManager<RewardTable> {
     protected void accept(Map<Identifier, RewardTable> tables, String source) {
         TreeMap<Integer, RewardTable> map = new TreeMap<>();
         Map<String, RewardTable> bonus = new HashMap<>();
-        tables.forEach((id, table) -> {
-            if (table.bonus().isPresent()) {
-                bonus.put(table.bonus().get(), table);
-                return;
+        tables.forEach((id, table) -> add(map, bonus, id, table));
+
+        // Own tables from config/gsmod_daily/custom_rewards/ go on top of the world's tables.
+        if (CustomRewardsConfig.enabled()) {
+            Path dir = CustomRewardsConfig.rewardsFolder();
+            TreeMap<Integer, RewardTable> customDays = new TreeMap<>();
+            Map<String, RewardTable> customBonus = new HashMap<>();
+            readExtraFolder(dir).forEach((id, table) -> add(customDays, customBonus, id, table));
+            if (!customDays.isEmpty() || !customBonus.isEmpty()) {
+                if (CustomRewardsConfig.mode() == CustomRewardsConfig.Mode.REPLACE) {
+                    if (customDays.isEmpty()) {
+                        GSModDaily.LOGGER.warn("{} has no reward days; keeping the world's days (mode REPLACE needs at least one \"day\" file)", dir);
+                    } else {
+                        map.clear();
+                    }
+                    bonus.clear();
+                }
+                map.putAll(customDays);
+                bonus.putAll(customBonus);
+                source += " + " + dir + " (" + CustomRewardsConfig.mode() + ", days " + customDays.keySet() + ", bonuses " + customBonus.keySet() + ")";
             }
-            if (table.day() < 1) {
-                GSModDaily.LOGGER.warn("Daily reward table {} has neither a \"day\" nor a \"bonus\"; skipped", id);
-                return;
-            }
-            RewardTable previous = map.put(table.day(), table);
-            if (previous != null) {
-                GSModDaily.LOGGER.warn("Daily reward day {} is defined more than once; using {}", table.day(), id);
-            }
-        });
+        }
         byDay = map;
         bonuses = Map.copyOf(bonus);
         GSModDaily.LOGGER.info("Loaded {} daily reward tables (cycle of {} days) and bonuses {} from {}", map.size(), cycleLength(),
                 bonuses.keySet(), source);
+    }
+
+    private static void add(Map<Integer, RewardTable> days, Map<String, RewardTable> bonuses, Identifier id, RewardTable table) {
+        if (table.bonus().isPresent()) {
+            bonuses.put(table.bonus().get(), table);
+            return;
+        }
+        if (table.day() < 1) {
+            GSModDaily.LOGGER.warn("Daily reward table {} has neither a \"day\" nor a \"bonus\"; skipped", id);
+            return;
+        }
+        RewardTable previous = days.put(table.day(), table);
+        if (previous != null) {
+            GSModDaily.LOGGER.warn("Daily reward day {} is defined more than once; using {}", table.day(), id);
+        }
     }
 
     /** A bonus table such as {@link #WEEK_BONUS} or {@link #COMEBACK_BONUS}, or {@code null}. */

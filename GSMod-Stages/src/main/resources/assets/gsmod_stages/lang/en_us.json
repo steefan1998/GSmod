@@ -1,0 +1,18 @@
+{
+  "message.gsmod_stages.world_open": "The Ender Dragon has been defeated! The end-game stage is now open.",
+  "message.gsmod_stages.hint": "Unlock the end-game stage once with the button on the Daily screen (/daily menu) or with /stages unlock.",
+  "message.gsmod_stages.unlocked": "End-game unlocked! You can now use the end-game mods.",
+  "message.gsmod_stages.locked_dragon": "Locked: defeat the Ender Dragon first",
+  "message.gsmod_stages.locked_unlock": "Locked: unlock the end-game stage first (/stages unlock)",
+  "message.gsmod_stages.status.open": "End-game stage: open (the Ender Dragon has been defeated)",
+  "message.gsmod_stages.status.closed": "End-game stage: locked until the Ender Dragon is defeated",
+  "message.gsmod_stages.status.unlocked": "You have unlocked the end-game stage.",
+  "message.gsmod_stages.players_unlocked": "Unlocked the end-game stage for %s player(s)",
+  "message.gsmod_stages.players_locked": "Locked the end-game stage again for %s player(s)",
+  "screen.gsmod_stages.locked": "🔒 End-game: defeat the Ender Dragon",
+  "screen.gsmod_stages.locked.tooltip": "End-game mods such as EMC stay locked until the Ender Dragon has been defeated in this world.",
+  "screen.gsmod_stages.unlock": "★ Unlock end-game",
+  "screen.gsmod_stages.unlock.tooltip": "The dragon has been defeated. Click once to unlock the end-game mods for yourself. This cannot be undone.",
+  "screen.gsmod_stages.unlocked": "✔ End-game unlocked",
+  "screen.gsmod_stages.unlocked.tooltip": "You can use the end-game mods."
+}

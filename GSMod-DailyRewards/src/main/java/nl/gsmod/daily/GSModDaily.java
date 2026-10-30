@@ -20,6 +20,8 @@ public class GSModDaily {
         DailyEvents.register(modBus);
         DailyGameTests.register(modBus);
         container.registerConfig(ModConfig.Type.SERVER, DailyConfig.SPEC);
+        container.registerConfig(ModConfig.Type.COMMON, CustomRewardsConfig.SPEC, CustomRewardsConfig.FILE_NAME);
+        CustomRewardsConfig.writeDefaults();
     }
 
     public static Identifier id(String path) {

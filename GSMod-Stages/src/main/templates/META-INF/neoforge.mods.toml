@@ -1,0 +1,42 @@
+license="${mod_license}"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+description='''
+Game stages: end-game mods such as ProjectE (EMC) and Stellaris stay locked until the Ender
+Dragon has been defeated in the world. After that every player unlocks them
+once, with the button on the Daily screen or /stages unlock. Locked items are
+hidden in JEI.
+'''
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+# Optional: the unlock button on the Daily screen.
+[[dependencies.${mod_id}]]
+    modId="gsmod_daily"
+    type="optional"
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"
+
+# Optional: locked items are hidden in JEI until unlocked.
+[[dependencies.${mod_id}]]
+    modId="jei"
+    type="optional"
+    versionRange="*"
+    ordering="NONE"
+    side="CLIENT"

@@ -10,7 +10,8 @@ plugins {
 
 rootProject.name = 'GSMod'
 
-// Two separate mods, each with its own jar:
+// Separate mods, each with its own jar:
 //   GSMod-Tech          (mod id gsmod)       machines, materials, upgrades, energy
 //   GSMod-DailyRewards  (mod id gsmod_daily) daily rewards and missions
-include 'GSMod-Tech', 'GSMod-DailyRewards'
+//   GSMod-Stages        (mod id gsmod_stages) end-game mods unlock after the Ender Dragon
+include 'GSMod-Tech', 'GSMod-DailyRewards', 'GSMod-Stages'

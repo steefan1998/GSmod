@@ -1,0 +1,14 @@
+{
+  "day": 10,
+  "tier": "netherite",
+  "items": [ { "id": "minecraft:netherite_scrap", "count": 2 } ],
+  "random": [
+    { "weight": 4, "item": { "id": "minecraft:ancient_debris" }, "min": 1, "max": 2 },
+    { "weight": 1, "item": { "id": "minecraft:netherite_ingot" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "gsmod" } ], "weight": 2, "item": { "id": "gsmod:speed_upgrade" } },
+    { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" } ], "weight": 2, "item": { "id": "mekanism:elite_tier_installer" } }
+  ],
+  "rolls": 1,
+  "experience": 150,
+  "missions": [ "gsmod_daily:mine_iron_ore" ]
+}
