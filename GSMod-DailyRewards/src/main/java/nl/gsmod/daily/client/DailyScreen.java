@@ -53,6 +53,24 @@ public class DailyScreen extends Screen {
         return Math.max(4, (height - panelHeight()) / 2);
     }
 
+    /** Panel position, for mods that add widgets below it in {@code ScreenEvent.Init.Post} (e.g. GS Mod: Stages). */
+    public int panelLeft() {
+        return left();
+    }
+
+    public int panelBottom() {
+        return top() + panelHeight();
+    }
+
+    public int panelWidth() {
+        return WIDTH;
+    }
+
+    /** Re-creates the widgets, so mods that add their own in {@code ScreenEvent.Init.Post} can update them. */
+    public void refreshWidgets() {
+        rebuildWidgets();
+    }
+
     @Override
     protected void init() {
         claimButton = addRenderableWidget(Button.builder(Component.empty(), b -> {

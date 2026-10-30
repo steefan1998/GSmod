@@ -1,0 +1,137 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+    id 'idea'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = 'GSMod-Stages'
+}
+
+// Mojang ships Java 25 to end users in 26.1, so mods should target Java 25.
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+repositories {
+    // JEI, to hide locked items until they are unlocked.
+    maven {
+        url = 'https://maven.blamejared.com'
+        content {
+            includeGroup 'mezz.jei'
+            includeGroup 'net.mezzdev.config'
+        }
+    }
+}
+
+sourceSets {
+    // Dev-only test driver (src/devcheck), never part of the release jar; only runDevCheck loads it.
+    devcheck
+}
+
+evaluationDependsOn(':GSMod-DailyRewards')
+def daily = project(':GSMod-DailyRewards')
+
+neoForge {
+    version = project.neo_version
+
+    runs {
+        client {
+            client()
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        server {
+            server()
+            programArgument '--nogui'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        gameTestServer {
+            type = "gameTestServer"
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+        // ./gradlew :GSMod-Stages:runDevCheck : creates/loads run-devcheck/saves/stages, locks a few vanilla items,
+        // checks the lock, the Daily screen button and JEI, takes screenshots into run-devcheck/screenshots, then quits.
+        devCheck {
+            client()
+            gameDirectory = file('run-devcheck')
+            programArguments.addAll('--quickPlaySingleplayer', 'stages')
+        }
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+        // Daily Rewards is optional; it is loaded in dev runs so the unlock button on the Daily screen can be tested.
+        gsmod_daily {
+            sourceSet(daily.sourceSets.main)
+        }
+        gsmod_stages_devcheck {
+            sourceSet(sourceSets.devcheck)
+        }
+    }
+}
+
+neoForge.runs.configureEach { run ->
+    if (run.name != 'devCheck') {
+        run.loadedMods = [neoForge.mods.named(project.mod_id).get(), neoForge.mods.named('gsmod_daily').get()]
+    }
+}
+neoForge.addModdingDependenciesTo(sourceSets.devcheck)
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+dependencies {
+    // Only nl.gsmod.stages.client.DailyScreenButton uses it, and only when gsmod_daily is installed.
+    compileOnly daily
+    localRuntime daily
+    devcheckImplementation(sourceSets.main.output)
+
+    // Only nl.gsmod.stages.compat.JeiStagesPlugin uses it; JEI loads that class itself when installed.
+    compileOnly "mezz.jei:jei-${jei_minecraft_version}-neoforge-api:${jei_version}"
+    localRuntime "mezz.jei:jei-${jei_minecraft_version}-neoforge:${jei_version}"
+
+    // Optional mods to load in dev runs for testing compat (see dev_runtime_mods in gradle.properties).
+    (findProperty('dev_runtime_mods') ?: '').split(';').collect { it.trim() }.findAll { it }.each { path ->
+        def jar = rootProject.file(path)
+        if (jar.isFile()) {
+            localRuntime files(jar)
+        }
+    }
+}
+
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
+}
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

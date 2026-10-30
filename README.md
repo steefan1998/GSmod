@@ -70,6 +70,10 @@ Every world gets its own editable copy the first time it starts:
 
 Edit, add or delete files there; changes apply with `/reload` or `/daily debug reload`. Delete a folder to get the defaults back. `gsmod_daily-server.toml` holds the world's settings (rewards on/off, time zone and reset hour, streak grace days, week bonus, comeback reward, missions on/off, missions per day) and applies on the next world start. Put a `gsmod_daily-server.toml` in `defaultconfigs/` to use it for new worlds.
 
+### Own rewards for every world
+
+`config/gsmod_daily/custom_rewards/` holds your own reward tables (same format as below) and applies to every world. `config/gsmod_daily/custom_rewards.toml` sets `mode`: `MERGE` (default; a custom day or bonus replaces that day of the world, a higher day makes the cycle longer) or `REPLACE` (only the custom files count). `config/gsmod_daily/uitleg/` explains it all (Dutch `LEESMIJ.txt`, English `README_EN.txt`) with example files in `voorbeelden/`; it is recreated when deleted. Changes apply with `/reload` or `/daily debug reload`.
+
 Reward day (a bonus table uses `"bonus": "week"` or `"bonus": "comeback"` instead of `"day"`):
 
 ```json
@@ -116,6 +120,19 @@ Mission ids are `gsmod_daily:<path in daily_missions without .json>`, e.g. `gsmo
 ### For other mods
 
 `nl.gsmod.daily.api.DailyMissionsApi` lets any mod feed the machine missions (`machineUsed`, `itemProduced`, `energyGenerated`). Only call it when `ModList.get().isLoaded("gsmod_daily")`; see `GSMod-Tech/src/main/java/nl/gsmod/compat/DailyHooks.java` for an example that keeps Daily Rewards optional.
+
+## GS Mod: Stages
+
+Mod id `gsmod_stages`, jar `GSMod-Stages/build/libs/GSMod-Stages-<version>.jar`. End-game mods stay locked until the Ender Dragon has been defeated in the world (worlds where it was already defeated open right away). After that every player unlocks the stage **once**, with the **★ Unlock end-game** button under the Daily screen (needs GS Mod: Daily Rewards) or `/stages unlock`; it stays unlocked for that player.
+
+While locked, items and blocks from `lockedMods` (default: `projecte`, `projectexpansion`, `stellaris`, `draconicevolution`, `avaritia`, `extendedcrafting`) and `lockedItems` cannot be used, placed or opened, crafted locked items are taken away again, and with JEI installed they are hidden until the player unlocks. Creative and spectator players are not locked (`creativeBypass`).
+
+- `/stages` — stage status
+- `/stages unlock` — unlock it for yourself, once the dragon is defeated
+- `/stages world open|close` — operators: open or close the stage for the world
+- `/stages player <players> unlock|lock` — operators: change it per player
+
+Settings in `<world>/serverconfig/gsmod_stages-server.toml`: `lockedMods`, `lockedItems` and `allowedItems` (item ids or `#tags`), `requirePlayerUnlock`, `creativeBypass`, `announce`.
 
 ## Languages
 

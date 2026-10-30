@@ -1,0 +1,18 @@
+{
+  "message.gsmod_stages.world_open": "De Enderdraak is verslagen! De end-game stage is nu open.",
+  "message.gsmod_stages.hint": "Ontgrendel de end-game stage één keer met de knop in het Daily scherm (/daily menu) of met /stages unlock.",
+  "message.gsmod_stages.unlocked": "End-game ontgrendeld! Je kunt nu de end-game mods gebruiken.",
+  "message.gsmod_stages.locked_dragon": "Vergrendeld: versla eerst de Enderdraak",
+  "message.gsmod_stages.locked_unlock": "Vergrendeld: ontgrendel eerst de end-game stage (/stages unlock)",
+  "message.gsmod_stages.status.open": "End-game stage: open (de Enderdraak is verslagen)",
+  "message.gsmod_stages.status.closed": "End-game stage: vergrendeld tot de Enderdraak verslagen is",
+  "message.gsmod_stages.status.unlocked": "Je hebt de end-game stage ontgrendeld.",
+  "message.gsmod_stages.players_unlocked": "End-game stage ontgrendeld voor %s speler(s)",
+  "message.gsmod_stages.players_locked": "End-game stage weer vergrendeld voor %s speler(s)",
+  "screen.gsmod_stages.locked": "🔒 End-game: versla de Enderdraak",
+  "screen.gsmod_stages.locked.tooltip": "End-game mods zoals EMC blijven vergrendeld tot de Enderdraak in deze wereld verslagen is.",
+  "screen.gsmod_stages.unlock": "★ End-game ontgrendelen",
+  "screen.gsmod_stages.unlock.tooltip": "De draak is verslagen. Klik één keer om de end-game mods voor jezelf te ontgrendelen. Dit kan niet ongedaan worden.",
+  "screen.gsmod_stages.unlocked": "✔ End-game ontgrendeld",
+  "screen.gsmod_stages.unlocked.tooltip": "Je kunt de end-game mods gebruiken."
+}

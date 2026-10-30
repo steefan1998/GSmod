@@ -1,0 +1,7 @@
+Zet hier je eigen daily rewards neer (.json bestanden).
+
+Begin met een voorbeeld uit ../uitleg/voorbeelden/: kopieer het naar deze map en pas het aan.
+De volledige uitleg staat in ../uitleg/LEESMIJ.txt (English: ../uitleg/README_EN.txt).
+
+Zolang hier geen .json bestanden staan, gebruikt elke wereld gewoon zijn eigen rewards.
+Wijzigingen gelden na /reload of /daily debug reload.

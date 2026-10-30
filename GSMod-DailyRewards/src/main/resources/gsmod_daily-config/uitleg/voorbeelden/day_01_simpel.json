@@ -1,0 +1,8 @@
+{
+  "day": 1,
+  "items": [
+    { "id": "minecraft:bread", "count": 8 },
+    { "id": "minecraft:torch", "count": 16 }
+  ],
+  "experience": 20
+}

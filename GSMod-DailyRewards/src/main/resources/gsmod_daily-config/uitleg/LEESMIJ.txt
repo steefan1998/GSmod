@@ -1,0 +1,122 @@
+GS Mod: Daily Rewards - eigen daily rewards maken
+=================================================
+
+Met deze map maak je je eigen daily rewards, die in ELKE wereld (en op je server) gelden.
+
+  config/gsmod_daily/
+      custom_rewards.toml     instellingen (aan/uit, MERGE of REPLACE)
+      custom_rewards/         HIER zet jij je eigen .json bestanden
+      uitleg/                 deze uitleg + voorbeelden (wordt opnieuw gemaakt als je hem weggooit)
+          voorbeelden/        kant-en-klare voorbeelden om te kopieren
+
+
+1. Snel beginnen
+----------------
+  1. Kopieer bijvoorbeeld uitleg/voorbeelden/day_01_simpel.json naar custom_rewards/
+  2. Pas de items aan
+  3. Typ in de game /reload (of /daily debug reload)
+  4. Check met /daily debug preview 1 wat dag 1 nu geeft
+
+Een bestandsnaam mag alleen kleine letters, cijfers, _ en - bevatten (dus "dag_1.json",
+niet "Dag 1.json"). De naam zelf maakt niet uit: welke dag het is staat IN het bestand ("day").
+
+
+2. MERGE of REPLACE (custom_rewards.toml)
+------------------------------------------
+  MERGE   (standaard)  Jouw dag vervangt dezelfde dag van de wereld. Alle andere dagen
+                       blijven zoals ze waren. Maak je alleen day 3, dan verandert alleen dag 3.
+                       Maak je een dag hoger dan de laatste (bv. day 14), dan wordt de cyclus
+                       14 dagen lang.
+  REPLACE              Alleen jouw bestanden tellen. De standaard rewards van de wereld worden
+                       genegeerd, ook de week- en comeback-bonus (maak die dan zelf).
+                       Staat er nog geen enkele "day" in custom_rewards/, dan blijven de dagen
+                       van de wereld gewoon gelden.
+
+Na het aanpassen van custom_rewards.toml: /reload. Na het aanpassen van de .json bestanden
+ook /reload (of /daily debug reload).
+
+
+3. Hoe een reward-bestand werkt
+-------------------------------
+  {
+    "day": 5,
+    "tier": "iron",
+    "items": [ { "id": "minecraft:bread", "count": 4 } ],
+    "random": [
+      { "weight": 4, "item": { "id": "minecraft:iron_ingot" }, "min": 4, "max": 8 },
+      { "weight": 1, "item": { "id": "minecraft:iron_pickaxe" } }
+    ],
+    "rolls": 2,
+    "experience": 50,
+    "missions": [ "gsmod_daily:mine_iron_ore" ]
+  }
+
+  "day"         Welke dag van de streak (1 = de eerste keer claimen). De hoogste dag bepaalt
+                hoe lang de cyclus is; daarna begint hij opnieuw bij dag 1.
+                Heeft een dag geen bestand, dan geldt de dichtstbijzijnde lagere dag.
+  "bonus"       In plaats van "day": "week" (elke 7 dagen op rij, extra bovenop de dag)
+                of "comeback" (als iemand zijn streak kwijtraakt).
+  "tier"        Optioneel. Naam die spelers zien: iron, diamond, netherite, week en comeback
+                worden vertaald; andere tekst wordt gewoon zo getoond (bv. "Feestdag").
+  "items"       Deze items krijg je ALTIJD. "count" = aantal (standaard 1).
+  "random"      Een lijst waaruit willekeurig gekozen wordt:
+                  "weight"     kans ten opzichte van de rest (4 is 4x zo vaak als 1)
+                  "item"       het item, net als bij "items"
+                  "min"/"max"  willekeurig aantal (1-99); zonder min/max geldt "count"
+                Hetzelfde item wordt op een dag nooit twee keer gekozen.
+  "rolls"       Hoeveel items er uit "random" gekozen worden (standaard 1).
+  "experience"  XP-punten (geen levels). 50 punten is ongeveer level 0 -> 5.
+  "missions"    Optioneel. Missies die op deze dag altijd gegeven worden.
+
+Alles behalve "day" of "bonus" is optioneel.
+
+
+4. Speciale items (enchants, namen, lore)
+-----------------------------------------
+Met "components" geef je een item extra eigenschappen:
+
+  { "id": "minecraft:diamond_pickaxe",
+    "components": {
+      "minecraft:custom_name": "Gelukspikhouweel",
+      "minecraft:lore": [ "Alleen voor trouwe spelers" ],
+      "minecraft:enchantments": { "minecraft:efficiency": 3, "minecraft:unbreaking": 2 }
+    } }
+
+  Enchanted book:  "minecraft:stored_enchantments": { "minecraft:mending": 1 }
+
+Zie uitleg/voorbeelden/day_07_speciale_items.json.
+
+
+5. Items uit andere mods
+------------------------
+Gebruik gewoon het id van de mod, bv. "mekanism:upgrade_speed". Wil je dat de reward ook
+werkt als die mod NIET geinstalleerd is, zet er dan een voorwaarde bij:
+
+  { "neoforge:conditions": [ { "type": "neoforge:mod_loaded", "modid": "mekanism" } ],
+    "weight": 1, "item": { "id": "mekanism:upgrade_speed" } }
+
+Zonder die mod wordt de regel dan overgeslagen. Je kunt de voorwaarde ook bovenaan het hele
+bestand zetten; dan telt het hele bestand alleen met die mod.
+Het id van een item zie je in de game met F3 + H (geavanceerde tooltips).
+
+
+6. Testen en fouten zoeken
+--------------------------
+  /daily debug preview <dag|week|comeback>   kansen per item + een voorbeeld-roll
+  /daily debug give <speler> <dag>           geef een dag zonder de streak te veranderen
+  /daily debug setday <speler> <dag>         de volgende claim geeft die dag
+  /daily debug unclaim <speler>              vandaag nog een keer claimen
+  /daily debug reload                        bestanden opnieuw inlezen
+
+Gebeurt er niks? Kijk in logs/latest.log naar regels met "gsmod_daily" of "Skipping": daar
+staat welk bestand niet klopt en waarom (vaak een vergeten komma of een fout item-id).
+Een .json bestand mag geen // commentaar bevatten.
+
+
+7. Overig
+---------
+- Resettijd, tijdzone, weekbonus-interval enz. staan per wereld in
+  <wereld>/serverconfig/gsmod_daily-server.toml.
+- De standaard rewards van een wereld staan in <wereld>/gsmod_daily/daily_rewards/ - handig
+  om te kopieren als startpunt.
+- Op een server: zet deze map op de SERVER; spelers hoeven niks aan te passen.

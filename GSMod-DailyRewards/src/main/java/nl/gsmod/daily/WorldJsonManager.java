@@ -116,6 +116,22 @@ public abstract class WorldJsonManager<T> extends SimpleJsonResourceReloadListen
         GSModDaily.LOGGER.info("Created {} with {} default files", dir, defaultFiles.size());
     }
 
+    /**
+     * Reads definitions from a folder outside the world, such as {@code config/gsmod_daily/custom_rewards/}.
+     * Empty if the folder is missing or nothing has been loaded yet.
+     */
+    protected Map<Identifier, T> readExtraFolder(Path dir) {
+        if (ops == null || !Files.isDirectory(dir)) {
+            return Map.of();
+        }
+        try {
+            return readFolder(dir);
+        } catch (IOException e) {
+            GSModDaily.LOGGER.error("Could not read {}", dir, e);
+            return Map.of();
+        }
+    }
+
     private Map<Identifier, T> readFolder(Path dir) throws IOException {
         Map<Identifier, T> result = new LinkedHashMap<>();
         try (Stream<Path> files = Files.walk(dir)) {
